@@ -1,0 +1,17 @@
+.first-page {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: teal; /* Background color */
+  }
+  
+  .contents {
+    text-align: center; /* Center align text */
+  }
+  
+  /* Add this style to control the margin between the Message and button */
+  .contents > *:not(:last-child) {
+    margin-bottom: 0.5rem; /* Adjust as needed */
+  }
+  
