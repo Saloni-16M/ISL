@@ -10,7 +10,7 @@ const MainPage = () => {
   const [videoStream, setVideoStream] = useState(null);
   const [imageSrc, setImageSrc] = useState(null);
   const [language, setLanguage] = useState('en');
-  const [outputText, setOutputText] = useState('hello Saloni');
+  const [outputText, setOutputText] = useState('');
   const [showAccessPopup, setShowAccessPopup] = useState(true);
 
   useEffect(() => {
@@ -20,6 +20,7 @@ const MainPage = () => {
       }
     };
   }, [videoStream]);
+
 
   const handleCameraAccess = async () => {
     try {
@@ -38,7 +39,57 @@ const MainPage = () => {
     canvas.height = videoElement.videoHeight;
     const context = canvas.getContext('2d');
     context.drawImage(videoElement, 0, 0);
-    setImageSrc(canvas.toDataURL('image/png'));
+    const imgData = canvas.toDataURL('image/png')
+    setImageSrc(imgData);
+    sendImgToAPI(imgData)
+    updateOutputTextFromApi()
+  };
+
+const sendImgToAPI = (imgData) =>{
+
+  // Convert base64 to binary format (raw image file)
+
+  const blob = dataURLtoBlob(imgData);
+
+  // Create FormData to send the image to the server
+  const formData = new FormData();
+  formData.append('image', blob, 'captured_image.png');
+
+
+  fetch('http://localhost:5118/ISL', {
+    method: 'POST',
+    body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Image successfully uploaded:', data);
+  })
+  .catch(error => {
+    console.error('Error uploading image:', error);
+  });
+};
+
+// Helper function to convert base64 image data to a Blob
+const dataURLtoBlob = (dataURL) => {
+  const parts = dataURL.split(';base64,');
+  const byteString = atob(parts[1]);
+  const mimeType = parts[0].split(':')[1];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: mimeType });
+};
+
+const updateOutputTextFromApi = async () => {
+    try {
+      const response = await fetch('http://localhost:5118/ISL'); // Make the API call (replace with your endpoint)
+      const data = await response.json(); // Assuming the backend returns JSON
+      setOutputText(data.message); // Update state with the returned text
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
   const handleCaptureAnotherImage = () => {
