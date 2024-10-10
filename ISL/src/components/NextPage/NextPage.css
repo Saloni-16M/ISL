@@ -1,3 +1,8 @@
 .next_page{
-    background-color: teal;
+    background-color: #d7d0ca;
+    color: black;
+}
+
+.btn-color{
+    background-color: 	#f1afaf;
 }

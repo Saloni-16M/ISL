@@ -12,7 +12,7 @@ const FirstPage = () => {
         <Message />
 
         {/* Get Started button */}
-        <Started_btn />
+       
       </div>
     </div>
   );

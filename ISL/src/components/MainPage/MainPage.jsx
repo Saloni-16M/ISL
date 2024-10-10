@@ -3,6 +3,8 @@ import CameraPopup from '../CameraPopup/CameraPopup';
 import CameraFeed from '../CameraFeed/CameraFeed';
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import OutputBox from '../OutputBox/OutputBox';
+import './MainPage.css';
+
 
 const MainPage = () => {
   const [videoStream, setVideoStream] = useState(null);
@@ -66,8 +68,8 @@ const MainPage = () => {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-teal-600 p-6">
-      <h1 className="text-3xl font-bold mb-6">Sign Language Conversion</h1>
+    <div className=" main flex flex-col justify-center items-center h-screen  p-6 ">
+      <h1 className="text-3xl font-bold mb-6 font-">Sign Language Conversion</h1>
       
       {showAccessPopup && (
         <CameraPopup handleCameraAccess={handleCameraAccess} />

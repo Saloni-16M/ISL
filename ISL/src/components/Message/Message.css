@@ -1,11 +1,56 @@
-.msg_div{
+@keyframes slideInLeft {
+    0% {
+      transform: translateX(-100%); /* Start off-screen to the left */
+      opacity: 0; /* Fully transparent */
+    }
+    100% {
+      transform: translateX(0); /* Move to original position */
+      opacity: 1; /* Fully opaque */
+    }
+  }
+  
+  @keyframes slideInRight {
+    0% {
+      transform: translateX(100%); /* Start off-screen to the right */
+      opacity: 0; /* Fully transparent */
+    }
+    100% {
+      transform: translateX(0); /* Move to original position */
+      opacity: 1; /* Fully opaque */
+    }
+  }
+  
+  .msg_container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
-}
-.h1{
+    color: black; /* Black text color */
+    margin-bottom: 20px; 
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    height: 100%;
+    max-height: 600px;
+    background-color: whitesmoke; /* Space below the message */
+  }
+  
+  .message {
     font-size: 50px;
     font-weight: bolder;
-}
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    animation: slideInLeft 2s ease-in-out; /* Apply left to right animation */
+  }
+  
+  .message2 {
+    font-size: 50px;
+    font-weight: bolder;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    color: #bb0e3c;
+    animation: slideInRight 2s ease-in-out; /* Apply right to left animation */
+  }
