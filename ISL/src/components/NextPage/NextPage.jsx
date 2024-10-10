@@ -15,7 +15,7 @@ const NextPage = () => {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen p-6 next_page">
-      <h1 className="text-4xl font-bold text-center mb-8 text-white-600">
+      <h1 className=" font-bold text-center mb-8 text-white-600 head-np">
         Let's Get Started with Sign Language Conversion!
       </h1>
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-4xl text-left next-pag-box">
