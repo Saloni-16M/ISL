@@ -59,10 +59,12 @@ app.Run();
 
 string RunPythonYOLOScript(string imagePath)
 {
+
+    
     var processStartInfo = new System.Diagnostics.ProcessStartInfo
     {
-        FileName = "python",
-        Arguments = $"../MODEL/main.py --image {imagePath}",
+        FileName ="./../../model/venv/bin/python",
+        Arguments = $"./../../model/main.py --image {imagePath}",
         RedirectStandardOutput = true,
         UseShellExecute = false,
         CreateNoWindow = true
