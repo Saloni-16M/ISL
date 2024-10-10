@@ -52,7 +52,7 @@ app.MapGet("/ISL", () =>
         if (string.IsNullOrEmpty(lastPrediction))
             return Results.Ok(new { message = "No prediction available." });
 
-        return Results.Ok(new { prediction = lastPrediction });
+        return Results.Ok(new { message = lastPrediction });
     })
     .WithName("GetPrediction")
     .WithOpenApi();
