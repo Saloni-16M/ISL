@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -60,21 +62,32 @@ app.Run();
 string RunPythonYOLOScript(string imagePath)
 {
 
-    
+    string outputFilePath = "./../../model/detected_classes.txt";
     var processStartInfo = new System.Diagnostics.ProcessStartInfo
     {
-        FileName ="./../../model/venv/bin/python",
-        Arguments = $"./../../model/main.py --image {imagePath}",
+        FileName = "./../../model/venv/bin/python",
+        Arguments = $"./../../model/main.py --image {imagePath} --model ./../../model/trained1.pt",
         RedirectStandardOutput = true,
         UseShellExecute = false,
         CreateNoWindow = true
     };
 
-    using (var process = System.Diagnostics.Process.Start(processStartInfo))
+    using (var process = Process.Start(processStartInfo))
     {
-        using (var reader = process?.StandardOutput)
+        if (process == null)
         {
-            return reader?.ReadToEnd() ?? String.Empty; // This will get the output from the Python script
+            return String.Empty; // Handle case where process could not be started
         }
+
+        process.WaitForExit();
+    }
+
+    if (File.Exists(outputFilePath))
+    {
+        return File.ReadAllText(outputFilePath); // Read and return the contents of the output file
+    }
+    else
+    {
+        return String.Empty;
     }
 }
