@@ -67,8 +67,9 @@ try:
         else:
             file.write("No objects detected.")  # Write message if no classes were detected
 
-    # Explicitly flush the file buffer to ensure all data is written
-    file.flush()
+        file.flush()     # Explicitly flush the file buffer to ensure all data is written
+
+
 
     # Ensure file writing is complete before exiting
     if os.path.exists(output_file_path):
