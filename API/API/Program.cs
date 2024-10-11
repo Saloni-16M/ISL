@@ -26,9 +26,7 @@ app.MapPost("/ISL", async (HttpRequest request) =>
         {
             return Results.BadRequest("No image file uploaded.");
         }
-
-
-
+        
         var imageFile = request.Form.Files[0];
 
         // Get the MIME type and determine the appropriate extension
@@ -78,7 +76,7 @@ app.Run();
 string RunPythonYOLOScript(string imagePath)
 {
 
-    string outputFilePath = "./../../model/detected_classes.txt";
+    string outputFilePath = Path.GetFullPath("./../../model/detected_classes.txt");
     var processStartInfo = new ProcessStartInfo
     {
         FileName = "./../../model/venv/bin/python",

@@ -57,7 +57,7 @@ for result in results:
         # Append the class name to the output list
         output_classes.append(class_name)
 
-output_file_path = "detected_classes.txt"  # Change this to your desired file path
+output_file_path = os.path.abspath("./../../model/detected_classes.txt")  # Change this to your desired file path
 
 # Write detected class names to the file
 with open(output_file_path, 'w') as file:
