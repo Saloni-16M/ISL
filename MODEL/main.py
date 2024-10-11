@@ -39,13 +39,22 @@ if image is None:
 # Make detections using the YOLO model
 results = model.predict(source=image)
 
+# Assuming 'results' contains predictions for the image
 output_classes = []
+
+# Iterate over the prediction results
 for result in results:
     for box in result.boxes:
-        # Get the class ID
-        class_id = int(box.cls)  # Class ID
-        # Get the class name from results.names
-        class_name = result.names[class_id]
+        # Get the class ID, assuming 'cls' is the attribute for the class label in 'box'
+        class_id = int(box.cls)
+
+        # Check if class_id is valid and get the class name from model.names
+        if class_id < len(model.names):
+            class_name = model.names[class_id]
+        else:
+            class_name = "Unknown"  # In case there's an invalid class_id
+
+        # Append the class name to the output list
         output_classes.append(class_name)
 
 output_file_path = "detected_classes.txt"  # Change this to your desired file path

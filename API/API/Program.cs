@@ -83,7 +83,7 @@ string RunPythonYOLOScript(string imagePath)
     {
         FileName = "./../../model/venv/bin/python",
         Arguments = $"./../../model/main.py --image {imagePath} --model ./../../model/trained1.pt",
-        RedirectStandardOutput = true,
+        RedirectStandardOutput = false,
         UseShellExecute = false,
         CreateNoWindow = true
     };
