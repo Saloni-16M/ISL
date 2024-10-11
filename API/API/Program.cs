@@ -76,11 +76,15 @@ app.Run();
 string RunPythonYOLOScript(string imagePath)
 {
 
-    string outputFilePath = Path.GetFullPath("./../../model/detected_classes.txt");
+    string outputFilePath = Path.GetFullPath(Path.Combine("..", "..", "model", "detected_classes.txt"));
+    var pythonFilePath = Path.Combine("..", "..", "model", "venv", "bin", "python");
+    var scriptFilePath = Path.Combine("..", "..", "model", "main.py");
+    var modelFilePath = Path.Combine("..", "..", "model", "trained1.pt");
+
     var processStartInfo = new ProcessStartInfo
     {
-        FileName = "./../../model/venv/bin/python",
-        Arguments = $"./../../model/main.py --image {imagePath} --model ./../../model/trained1.pt",
+        FileName = pythonFilePath,
+        Arguments = $"{scriptFilePath} --image {imagePath} --model {modelFilePath}",
         RedirectStandardOutput = false,
         UseShellExecute = false,
         CreateNoWindow = true
@@ -95,7 +99,7 @@ string RunPythonYOLOScript(string imagePath)
 
         process.WaitForExit();
     }
-
+    
     if (File.Exists(outputFilePath))
     {
         return File.ReadAllText(outputFilePath); // Read and return the contents of the output file

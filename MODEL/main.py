@@ -57,11 +57,23 @@ for result in results:
         # Append the class name to the output list
         output_classes.append(class_name)
 
-output_file_path = os.path.abspath("./../../model/detected_classes.txt")  # Change this to your desired file path
+output_file_path = os.path.abspath(os.path.join("..", "..", "model", "detected_classes.txt"))
 
 # Write detected class names to the file
-with open(output_file_path, 'w') as file:
-    if output_classes:
-        file.write(" ".join(output_classes))  # Write class names separated by space
-    else:
-        file.write("No objects detected.")  # Write message if no classes were detected
+try:
+    with open(output_file_path, 'w') as file:
+        if output_classes:
+            file.write(" ".join(output_classes))  # Write class names separated by space
+        else:
+            file.write("No objects detected.")  # Write message if no classes were detected
+
+    # Explicitly flush the file buffer to ensure all data is written
+    file.flush()
+
+    # Ensure file writing is complete before exiting
+    if os.path.exists(output_file_path):
+        print(f"Output written successfully to {output_file_path}")
+
+except Exception as e:
+    print(f"Failed to write to file: {e}")
+    sys.exit(1)
