@@ -27,15 +27,31 @@ app.MapPost("/ISL", async (HttpRequest request) =>
             return Results.BadRequest("No image file uploaded.");
         }
 
+
+
         var imageFile = request.Form.Files[0];
 
-        // Save the image temporarily
-        var tempImagePath = Path.GetTempFileName();
+        // Get the MIME type and determine the appropriate extension
+        var mimeType = imageFile.ContentType; // e.g., "image/jpeg" or "image/png"
+        var extension = mimeType switch
+        {
+        "image/jpeg" => ".jpeg",
+        "image/png" => ".png",
+        _ => null
+        };
+
+        if (extension == null)
+        {
+        return Results.BadRequest("Unsupported file format. Please upload a JPEG or PNG image.");
+        }
+
+// Save the image with the appropriate extension
+        var tempImagePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + extension);
+
         using (var stream = new FileStream(tempImagePath, FileMode.Create))
         {
             await imageFile.CopyToAsync(stream);
         }
-
         // Call the Python YOLO model
         lastPrediction = RunPythonYOLOScript(tempImagePath);
 
@@ -63,7 +79,7 @@ string RunPythonYOLOScript(string imagePath)
 {
 
     string outputFilePath = "./../../model/detected_classes.txt";
-    var processStartInfo = new System.Diagnostics.ProcessStartInfo
+    var processStartInfo = new ProcessStartInfo
     {
         FileName = "./../../model/venv/bin/python",
         Arguments = $"./../../model/main.py --image {imagePath} --model ./../../model/trained1.pt",
