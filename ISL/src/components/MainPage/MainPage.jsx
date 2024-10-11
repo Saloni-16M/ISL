@@ -10,7 +10,7 @@ const MainPage = () => {
   const [videoStream, setVideoStream] = useState(null);
   const [imageSrc, setImageSrc] = useState(null);
   const [language, setLanguage] = useState('en');
-  const [outputText, setOutputText] = useState('hello Saloni');
+  const [outputText, setOutputText] = useState('');
   const [showAccessPopup, setShowAccessPopup] = useState(true);
 
   useEffect(() => {
@@ -20,6 +20,7 @@ const MainPage = () => {
       }
     };
   }, [videoStream]);
+
 
   const handleCameraAccess = async () => {
     try {
@@ -38,7 +39,74 @@ const MainPage = () => {
     canvas.height = videoElement.videoHeight;
     const context = canvas.getContext('2d');
     context.drawImage(videoElement, 0, 0);
-    setImageSrc(canvas.toDataURL('image/png'));
+    const imgDataURL = canvas.toDataURL('image/png')
+    setImageSrc(imgDataURL)
+    sendImgToAPI(imgDataURL)
+    updateOutputTextFromApi()
+  };
+
+
+
+const sendImgToAPI = async (imgData) => {
+  // Convert base64 to binary format (raw image file)
+  const blob = dataURItoBlob(imgData);
+
+  // Create FormData to send the image to the server
+  const formData = new FormData();
+  formData.append('image', blob);
+
+  try {
+    // Wait for the response from the server
+    const response = await fetch('http://localhost:5118/ISL', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Parse the response JSON once the upload and processing is complete
+    const data = await response.json();
+    console.log('Image successfully uploaded and processed:', data);
+
+    // Return the processed data (or any value that indicates success)
+    return data;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error; // Rethrow the error so it can be handled by the caller if needed
+  }
+};
+
+// Helper function to convert base64 image data to a Blob
+const dataURItoBlob = function(dataURI) {
+    // convert base64/URLEncoded data component to raw binary data held in a string
+    var byteString ;
+    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+        byteString = atob(dataURI.split(',')[1]);
+    else
+        byteString = unescape(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to a typed array
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ia], {type:mimeString});
+}
+
+const updateOutputTextFromApi = async () => {
+    try {
+      const response = await fetch('http://localhost:5118/ISL'); // Make the API call (replace with your endpoint)
+      const data = await response.json(); // Assuming the backend returns JSON
+      setOutputText(data.message); // Update state with the returned text
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
   const handleCaptureAnotherImage = () => {
