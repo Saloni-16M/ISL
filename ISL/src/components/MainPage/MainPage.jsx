@@ -40,33 +40,42 @@ const MainPage = () => {
     const context = canvas.getContext('2d');
     context.drawImage(videoElement, 0, 0);
     const imgDataURL = canvas.toDataURL('image/png')
-    setImageSrc(imgDataURL);
+    setImageSrc(imgDataURL)
     sendImgToAPI(imgDataURL)
     updateOutputTextFromApi()
   };
 
-const sendImgToAPI = (imgData) =>{
 
+
+const sendImgToAPI = async (imgData) => {
   // Convert base64 to binary format (raw image file)
-
   const blob = dataURItoBlob(imgData);
 
   // Create FormData to send the image to the server
   const formData = new FormData();
   formData.append('image', blob);
 
+  try {
+    // Wait for the response from the server
+    const response = await fetch('http://localhost:5118/ISL', {
+      method: 'POST',
+      body: formData,
+    });
 
-  fetch('http://localhost:5118/ISL', {
-    method: 'POST',
-    body: formData,
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Image successfully uploaded:', data);
-  })
-  .catch(error => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Parse the response JSON once the upload and processing is complete
+    const data = await response.json();
+    console.log('Image successfully uploaded and processed:', data);
+
+    // Return the processed data (or any value that indicates success)
+    return data;
+  } catch (error) {
     console.error('Error uploading image:', error);
-  });
+    throw error; // Rethrow the error so it can be handled by the caller if needed
+  }
 };
 
 // Helper function to convert base64 image data to a Blob
